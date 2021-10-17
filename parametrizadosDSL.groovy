@@ -17,7 +17,14 @@ job('ejemplo2-job-DSL') {
         githubPush()
   }
   steps {
-    	shell("bash jobscript.sh")
+    	dockerBuildAndPublish {
+            repositoryName('xisco151/nodejsapp')
+            tag('${GIT_REVISION,length=7}')
+            registryCredentials('docker-hub')
+            forcePull(false)
+            createFigerprints(false)
+            skipDecorate()
+        }
   }
   publishers {
    		mailer('franciscoelrio@gmail.com',true,true)
@@ -27,7 +34,7 @@ job('ejemplo2-job-DSL') {
             notifyNotBuilt(false)
             notifyUnstable(false)
             notifyBackToNormal(true)
-            notifySuccess(false)
+            notifySuccess(true)
             notifyRepeatedFailure(false)
             startNotification(false)
             includeTestSummary(false)
